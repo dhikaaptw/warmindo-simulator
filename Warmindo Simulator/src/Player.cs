@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Drawing;
-using System.Windows.Forms;
-using System.Threading.Tasks;
 using System.IO;
+using System.Windows.Forms;
 
 namespace Warmindo_Simulator.src
 {
@@ -13,62 +10,72 @@ namespace Warmindo_Simulator.src
     {
         public int X { get; set; }
         public int Y { get; set; }
-        public Image Sprite { get; set; }
 
-        private List<Image> frames = new List<Image>();
+        private Dictionary<string, List<Image>> directionFrames = new Dictionary<string, List<Image>>();
+        private string currentDirection = "Vertical";
         private int currentFrame = 0;
         private int frameDelay = 0;
-        private int frameSpeed = 5; // makin kecil makin cepat
-
-        private const int PlayerSize = 80; // Ukuran player tetap konsisten
+        private int frameSpeed = 5;
+        private const int PlayerSize = 80;
 
         public Player(int x, int y, Image sprite)
         {
             X = x;
             Y = y;
-            Sprite = sprite;
         }
 
         public void LoadFramesFromFolder(string folderPath)
         {
-            frames.Clear();
+            directionFrames.Clear();
+
+            directionFrames["Vertical"] = new List<Image>();
+            directionFrames["Right"] = new List<Image>();
+            directionFrames["Left"] = new List<Image>();
 
             for (int i = 1; i <= 15; i++)
             {
-                string path = Path.Combine(folderPath, $"{i}.png");
+                string path = Path.Combine(folderPath, i + ".png");
                 if (File.Exists(path))
                 {
-                    frames.Add(Image.FromFile(path));
-                }
-                else
-                {
-                    Console.WriteLine($"Tidak ditemukan: {path}");
+                    if (i <= 5)
+                        directionFrames["Vertical"].Add(Image.FromFile(path));
+                    else if (i <= 10)
+                        directionFrames["Right"].Add(Image.FromFile(path));
+                    else
+                        directionFrames["Left"].Add(Image.FromFile(path));
                 }
             }
 
-            if (frames.Count == 0)
+            if (directionFrames["Vertical"].Count == 0)
             {
-                MessageBox.Show("Gagal load sprite! Pastikan 1.png - 15.png ada di folder assets.");
+                MessageBox.Show("Gagal load sprite! Pastikan file 1-15.png ada di folder assets.");
             }
         }
 
         public void Animate()
         {
-            if (frames.Count == 0) return;
+            if (!directionFrames.ContainsKey(currentDirection)) return;
+            if (directionFrames[currentDirection].Count == 0) return;
 
             frameDelay++;
             if (frameDelay >= frameSpeed)
             {
-                currentFrame = (currentFrame + 1) % frames.Count;
+                currentFrame = (currentFrame + 1) % directionFrames[currentDirection].Count;
                 frameDelay = 0;
             }
         }
 
-        // ✅ Cegah tabrak obstacle dan keluar layar
         public void Move(Keys key, int speed, Rectangle obstacle, int formWidth, int formHeight)
         {
             int newX = X;
             int newY = Y;
+
+            if (key == Keys.W || key == Keys.S)
+                currentDirection = "Vertical";
+            else if (key == Keys.A)
+                currentDirection = "Left";
+            else if (key == Keys.D)
+                currentDirection = "Right";
 
             switch (key)
             {
@@ -94,12 +101,14 @@ namespace Warmindo_Simulator.src
 
         public void Draw(Graphics g)
         {
-            if (frames.Count > 0)
-                g.DrawImage(frames[currentFrame], X, Y, PlayerSize, PlayerSize);
-            else if (Sprite != null)
-                g.DrawImage(Sprite, X, Y, PlayerSize, PlayerSize);
+            if (directionFrames.ContainsKey(currentDirection) && directionFrames[currentDirection].Count > 0)
+            {
+                g.DrawImage(directionFrames[currentDirection][currentFrame], X, Y, PlayerSize, PlayerSize);
+            }
             else
-                g.FillRectangle(Brushes.OrangeRed, X, Y, PlayerSize, PlayerSize); // fallback
+            {
+                g.FillRectangle(Brushes.Blue, X, Y, PlayerSize, PlayerSize); // fallback
+            }
         }
 
         public Rectangle GetBounds()

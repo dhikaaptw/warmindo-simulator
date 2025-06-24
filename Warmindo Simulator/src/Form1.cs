@@ -22,8 +22,9 @@ namespace Warmindo_Simulator
             ui = new UIManager(lblPesanan, lblTimer, lblSkor, lblCookingStatus);
 
             gameTimer = new System.Windows.Forms.Timer();
-            gameTimer.Interval = 30;
+            gameTimer.Interval = 50;
             gameTimer.Tick += GameLoop;
+            gameTimer.Tick += GameTimer_Tick;
             gameTimer.Start();
 
             this.KeyDown += new KeyEventHandler(Form1_KeyDown);
@@ -32,6 +33,13 @@ namespace Warmindo_Simulator
             cmbMenu.Items.Add("Mie Instan");
             cmbMenu.Items.Add("Es Teh Manis");
             cmbMenu.SelectedIndex = 0;
+        }
+
+        private void GameTimer_Tick(object sender, EventArgs e)
+        {
+            logic.Update(this); // logika utama game
+            btnCook.Visible = logic.IsNearKompor(); // tombol masak muncul jika dekat kompor
+            Invalidate(); // untuk menggambar ulang layar
         }
 
         private void GameLoop(object sender, EventArgs e)

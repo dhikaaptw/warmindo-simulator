@@ -117,6 +117,20 @@ namespace Warmindo_Simulator.src
             player.Draw(g);
         }
 
+        public bool IsNearKompor()
+        {
+            Rectangle playerBounds = player.GetBounds();
+            Rectangle areaBawahKompor = new Rectangle(
+                komporRect.X,
+                komporRect.Bottom,
+                komporRect.Width,
+                50 // tinggi area dekat bawah kompor
+            );
+
+            return playerBounds.IntersectsWith(areaBawahKompor);
+        }
+
+
         public void StartCooking()
         {
             kitchen.StartCooking(SelectedMenu);

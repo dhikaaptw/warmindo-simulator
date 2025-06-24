@@ -41,7 +41,7 @@
             // 
             // btnServe
             // 
-            btnServe.Location = new Point(596, 197);
+            btnServe.Location = new Point(594, 82);
             btnServe.Name = "btnServe";
             btnServe.Size = new Size(150, 46);
             btnServe.TabIndex = 0;
@@ -87,7 +87,7 @@
             // 
             // btnCook
             // 
-            btnCook.Location = new Point(596, 134);
+            btnCook.Location = new Point(320, 82);
             btnCook.Name = "btnCook";
             btnCook.Size = new Size(150, 46);
             btnCook.TabIndex = 6;
