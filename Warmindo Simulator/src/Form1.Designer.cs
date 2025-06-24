@@ -32,13 +32,11 @@
             lblPesanan = new Label();
             lblTimer = new Label();
             lblSkor = new Label();
-            picPelanggan = new PictureBox();
             cmbMenu = new ComboBox();
             btnCook = new Button();
             label1 = new Label();
             btnRestart = new Button();
             lblCookingStatus = new Label();
-            ((System.ComponentModel.ISupportInitialize)picPelanggan).BeginInit();
             SuspendLayout();
             // 
             // btnServe
@@ -78,14 +76,6 @@
             lblSkor.Size = new Size(93, 32);
             lblSkor.TabIndex = 3;
             lblSkor.Text = "Skor : 0";
-            // 
-            // picPelanggan
-            // 
-            picPelanggan.Location = new Point(232, 118);
-            picPelanggan.Name = "picPelanggan";
-            picPelanggan.Size = new Size(200, 100);
-            picPelanggan.TabIndex = 4;
-            picPelanggan.TabStop = false;
             // 
             // cmbMenu
             // 
@@ -142,14 +132,12 @@
             Controls.Add(label1);
             Controls.Add(btnCook);
             Controls.Add(cmbMenu);
-            Controls.Add(picPelanggan);
             Controls.Add(lblSkor);
             Controls.Add(lblTimer);
             Controls.Add(lblPesanan);
             Controls.Add(btnServe);
             Name = "Form1";
             Text = "Form1";
-            ((System.ComponentModel.ISupportInitialize)picPelanggan).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -160,7 +148,6 @@
         private Label lblPesanan;
         private Label lblTimer;
         private Label lblSkor;
-        private PictureBox picPelanggan;
         private ComboBox cmbMenu;
         private Button btnCook;
         private Label label1;

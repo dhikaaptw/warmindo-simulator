@@ -11,22 +11,53 @@ namespace Warmindo_Simulator
         private bool isCooking = false;
         private Random random = new Random();
         private Player player;
+        private Keys? lastKeyPressed = null;
+        private int delayBeforeNewCustomer = 0;
+        private bool customerJustLeft = false;
+        private int customerTimeCounter = 0;
+        private int cookingTimeCounter = 0;
+        private Rectangle komporRect = new Rectangle(200, 100, 200, 200);
+        private Image komporImage;
 
         public Form1()
         {
             InitializeComponent();
 
-            player = new Player(50, 50, Image.FromFile("assets/sprite.png"));
+            this.KeyPreview = true;
+            this.KeyDown += Form1_KeyDown;
+            this.KeyUp += Form1_KeyUp;
 
-            gameTimer.Interval = 1000; // 1 detik
+            player = new Player(100, 100, null);
+            player.LoadFramesFromFolder("assets");
+            this.DoubleBuffered = true;
+
+            komporImage = Image.FromFile("assets/kompor.png");
+
+            gameTimer.Interval = 30;
             gameTimer.Tick += GameTimer_Tick;
             gameTimer.Start();
 
             cmbMenu.Items.Add("Mie Instan");
             cmbMenu.Items.Add("Es Teh Manis");
-            cmbMenu.SelectedIndex = 0; // default ke menu pertama
+            cmbMenu.SelectedIndex = 0;
 
-            AddNewCustomer(); // mulai dengan 1 pelanggan
+            AddNewCustomer();
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.W || e.KeyCode == Keys.A || e.KeyCode == Keys.S || e.KeyCode == Keys.D)
+            {
+                lastKeyPressed = e.KeyCode;
+            }
+        }
+
+        private void Form1_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == lastKeyPressed)
+            {
+                lastKeyPressed = null;
+            }
         }
 
         private void TampilkanPelanggan()
@@ -35,12 +66,12 @@ namespace Warmindo_Simulator
             {
                 Customer current = customerQueue[0];
                 lblPesanan.Text = $"Pesanan: {current.Order}";
-                //picPelanggan.Image = Image.FromFile("assets/sprite.png");
+                //picPelanggan.Image = null;
             }
             else
             {
                 lblPesanan.Text = "Tidak ada pelanggan";
-                picPelanggan.Image = null;
+                //picPelanggan.Image = null;
             }
         }
 
@@ -63,42 +94,84 @@ namespace Warmindo_Simulator
             customerQueue.Add(newCustomer);
 
             lblPesanan.Text = $"Pesanan: {selectedOrder}";
-           // picPelanggan.Image = Image.FromFile("assets/sprite.png"); // ganti sesuai gambar kamu
-
             TampilkanPelanggan();
         }
 
         private void GameTimer_Tick(object sender, EventArgs e)
         {
+            if (delayBeforeNewCustomer > 0)
+            {
+                delayBeforeNewCustomer--;
+                return;
+            }
+
+            if (customerJustLeft)
+            {
+                customerJustLeft = false;
+                AddNewCustomer();
+            }
+
+            if (lastKeyPressed != null)
+            {
+                player.Move(lastKeyPressed.Value, 5, komporRect, this.ClientSize.Width, this.ClientSize.Height);
+                player.Animate();
+            }
+
             if (isCooking)
             {
-                cookTimeLeft--;
-                string selectedMenu = cmbMenu.SelectedItem.ToString();
-                lblCookingStatus.Text = $"Memasak {selectedMenu} - sisa {cookTimeLeft} detik...";
-
-                if (cookTimeLeft <= 0)
+                cookingTimeCounter++;
+                if (cookingTimeCounter >= 33)
                 {
-                    isCooking = false;
-                    MessageBox.Show("Masakan siap disajikan!");
+                    cookingTimeCounter = 0;
+                    cookTimeLeft--;
+
+                    string selectedMenu = cmbMenu.SelectedItem.ToString();
+                    lblCookingStatus.Text = $"Memasak {selectedMenu} - sisa {cookTimeLeft} detik...";
+
+                    if (cookTimeLeft <= 0)
+                    {
+                        isCooking = false;
+                        MessageBox.Show("Masakan siap disajikan!");
+                    }
                 }
             }
 
             if (customerQueue.Count > 0)
             {
                 Customer current = customerQueue[0];
-                current.DecreaseWaitTime();
+                customerTimeCounter++;
+                if (customerTimeCounter >= 33)
+                {
+                    customerTimeCounter = 0;
+                    current.DecreaseWaitTime();
+                }
 
                 lblTimer.Text = $"Waktu: {current.WaitTime}";
 
-                if (current.WaitTime <= 0 && !current.IsServed)
+                if (current.WaitTime <= 0 && !current.IsServed && !current.IsAngry)
                 {
+                    current.IsAngry = true;
                     MessageBox.Show("Pelanggan marah dan pergi!");
                     customerQueue.RemoveAt(0);
-                    AddNewCustomer();
+                    TampilkanPelanggan();
+
+                    delayBeforeNewCustomer = 60;
+                    customerJustLeft = true;
+                    return;
                 }
             }
 
             lblSkor.Text = $"Skor: {score}";
+            this.Invalidate();
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+
+            e.Graphics.DrawImage(komporImage, komporRect.X, komporRect.Y, komporRect.Width, komporRect.Height);
+
+            player.Draw(e.Graphics);
         }
 
         private void btnServe_Click(object sender, EventArgs e)
@@ -124,6 +197,7 @@ namespace Warmindo_Simulator
                         customerQueue.RemoveAt(0);
                         TampilkanPelanggan();
                         MessageBox.Show("Pesanan salah!");
+                        AddNewCustomer();
                     }
                 }
             }
@@ -142,12 +216,15 @@ namespace Warmindo_Simulator
         {
             string selectedMenu = cmbMenu.SelectedItem.ToString();
 
-            if (selectedMenu == "Mie Instan")
-                cookTimeLeft = 10;
-            else if (selectedMenu == "Es Teh Manis")
-                cookTimeLeft = 5;
+            cookTimeLeft = selectedMenu switch
+            {
+                "Mie Instan" => 10,
+                "Es Teh Manis" => 5,
+                _ => 0
+            };
 
             isCooking = true;
+            cookingTimeCounter = 0;
             lblCookingStatus.Text = $"Memasak {selectedMenu} - sisa {cookTimeLeft} detik...";
         }
 
@@ -157,6 +234,10 @@ namespace Warmindo_Simulator
             score = 0;
             isCooking = false;
             cookTimeLeft = 0;
+            delayBeforeNewCustomer = 0;
+            customerJustLeft = false;
+            customerTimeCounter = 0;
+            cookingTimeCounter = 0;
 
             btnServe.Enabled = true;
             btnCook.Enabled = true;
@@ -169,7 +250,7 @@ namespace Warmindo_Simulator
             lblSkor.Text = "Skor: 0";
             lblTimer.Text = "Waktu: 0";
             lblPesanan.Text = "Pesanan: -";
-            picPelanggan.Image = null;
+            //picPelanggan.Image = null;
         }
     }
 }

@@ -11,6 +11,8 @@ namespace Warmindo_Simulator.src
         public string Order { get; set; }
         public int WaitTime { get; set; }
         public bool IsServed { get; set; }
+        public bool IsAngry { get; set; } = false;
+
 
         public Customer(string order)
         {
