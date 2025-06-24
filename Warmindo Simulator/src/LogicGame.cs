@@ -11,6 +11,8 @@ namespace Warmindo_Simulator.src
         private OrderSystem orderSystem;
         private InputHandler input;
         private Rectangle komporRect;
+        private Rectangle mejaRect;
+        private Image mejaImage;
 
         private int score = 0;
         private int delayBeforeNewCustomer = 0;
@@ -49,6 +51,9 @@ namespace Warmindo_Simulator.src
             input = new InputHandler();
 
             komporRect = new Rectangle(300, 150, 80, 80);
+            mejaImage = AssetManager.LoadImage("assets/mejaServe.png");
+            mejaRect = new Rectangle(komporRect.Right + 120, komporRect.Top, 160, 72); // posisinya di kanan kompor
+
             orderSystem.AddCustomer();
         }
 
@@ -66,7 +71,14 @@ namespace Warmindo_Simulator.src
         {
             if (input.IsKeyPressed())
             {
-                player.Move(input.GetActiveKey().Value, 5, komporRect, form.ClientSize.Width, form.ClientSize.Height);
+                player.Move(
+                    input.GetActiveKey().Value,
+                    5,
+                    GetGabunganObstacle(), // gabungan kompor + meja
+                    form.ClientSize.Width,
+                    form.ClientSize.Height
+            );
+
                 player.Animate();
             }
 
@@ -103,6 +115,29 @@ namespace Warmindo_Simulator.src
             }
         }
 
+        private Rectangle GetGabunganObstacle()
+        {
+            return Rectangle.Union(komporRect, mejaRect); // jadi 1 area
+        }
+
+        public bool IsNearMeja()
+        {
+            Rectangle playerRect = player.GetBounds();
+            return playerRect.IntersectsWith(mejaRect);
+        }
+
+        public bool IsNearMejaServe()
+        {
+            Rectangle playerRect = player.GetBounds();
+            Rectangle detectArea = new Rectangle(mejaRect.X, mejaRect.Y, mejaRect.Width, mejaRect.Height);
+
+            // Optional: perbesar sedikit area meja biar lebih gampang trigger
+            detectArea.Inflate(10, 10);
+
+            return playerRect.IntersectsWith(detectArea);
+        }
+
+
         public void Draw(Graphics g)
         {
             Image kompor = AssetManager.LoadImage("assets/kompor.png");
@@ -113,6 +148,11 @@ namespace Warmindo_Simulator.src
                 int height = kompor.Height * scale;
 
                 g.DrawImage(kompor, komporRect.X, komporRect.Y, width, height);
+            }
+
+            if (mejaImage != null)
+            {
+                g.DrawImage(mejaImage, mejaRect);
             }
             player.Draw(g);
         }

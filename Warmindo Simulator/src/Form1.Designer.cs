@@ -41,7 +41,7 @@
             // 
             // btnServe
             // 
-            btnServe.Location = new Point(594, 82);
+            btnServe.Location = new Point(487, 82);
             btnServe.Name = "btnServe";
             btnServe.Size = new Size(150, 46);
             btnServe.TabIndex = 0;
@@ -62,7 +62,7 @@
             // lblTimer
             // 
             lblTimer.AutoSize = true;
-            lblTimer.Location = new Point(337, 9);
+            lblTimer.Location = new Point(336, 9);
             lblTimer.Name = "lblTimer";
             lblTimer.Size = new Size(113, 32);
             lblTimer.TabIndex = 2;
@@ -87,11 +87,11 @@
             // 
             // btnCook
             // 
-            btnCook.Location = new Point(320, 82);
+            btnCook.Location = new Point(299, 82);
             btnCook.Name = "btnCook";
             btnCook.Size = new Size(150, 46);
             btnCook.TabIndex = 6;
-            btnCook.Text = "Masak";
+            btnCook.Text = "Buat";
             btnCook.UseVisualStyleBackColor = true;
             btnCook.Click += btnCook_Click;
             // 

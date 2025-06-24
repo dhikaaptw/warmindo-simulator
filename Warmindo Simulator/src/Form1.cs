@@ -15,6 +15,8 @@ namespace Warmindo_Simulator
         {
             InitializeComponent();
 
+            cmbMenu.DropDownStyle = ComboBoxStyle.DropDownList;
+
             this.KeyPreview = true;
             this.DoubleBuffered = true;
 
@@ -39,6 +41,7 @@ namespace Warmindo_Simulator
         {
             logic.Update(this); // logika utama game
             btnCook.Visible = logic.IsNearKompor(); // tombol masak muncul jika dekat kompor
+            btnServe.Visible = logic.IsNearMejaServe();
             Invalidate(); // untuk menggambar ulang layar
         }
 
