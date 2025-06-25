@@ -13,6 +13,7 @@ namespace Warmindo_Simulator.src
         private Rectangle komporRect;
         private Rectangle mejaRect;
         private Image mejaImage;
+        private Image lantaiImage;
 
         private int score = 0;
         private int delayBeforeNewCustomer = 0;
@@ -49,6 +50,8 @@ namespace Warmindo_Simulator.src
             kitchen = new Kitchen();
             orderSystem = new OrderSystem();
             input = new InputHandler();
+
+            lantaiImage = AssetManager.LoadImage("assets/lantai.png");
 
             komporRect = new Rectangle(300, 150, 80, 80);
             mejaImage = AssetManager.LoadImage("assets/mejaServe.png");
@@ -140,10 +143,15 @@ namespace Warmindo_Simulator.src
 
         public void Draw(Graphics g)
         {
+            if (lantaiImage != null)
+            {
+                g.DrawImage(lantaiImage, 0, 0, 800, 600); // ukuran formny 800x600
+            }
+
             Image kompor = AssetManager.LoadImage("assets/kompor.png");
             if (kompor != null)
             {
-                int scale = 2; // misal mau dibesarkan 2x
+                int scale = 2; 
                 int width = kompor.Width * scale;
                 int height = kompor.Height * scale;
 

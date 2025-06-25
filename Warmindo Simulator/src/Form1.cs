@@ -34,15 +34,17 @@ namespace Warmindo_Simulator
 
             cmbMenu.Items.Add("Mie Instan");
             cmbMenu.Items.Add("Es Teh Manis");
+            cmbMenu.Items.Add("Nasi Goreng");
+            cmbMenu.Items.Add("Minuman Manis");
             cmbMenu.SelectedIndex = 0;
         }
 
         private void GameTimer_Tick(object sender, EventArgs e)
         {
             logic.Update(this); // logika utama game
-            btnCook.Visible = logic.IsNearKompor(); // tombol masak muncul jika dekat kompor
+            btnCook.Visible = logic.IsNearKompor(); // tombol masak muncul kalau dekat kompor
             btnServe.Visible = logic.IsNearMejaServe();
-            Invalidate(); // untuk menggambar ulang layar
+            Invalidate(); // untuk ngegambar ulang layar
         }
 
         private void GameLoop(object sender, EventArgs e)

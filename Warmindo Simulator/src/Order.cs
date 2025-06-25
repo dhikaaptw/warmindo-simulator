@@ -15,7 +15,7 @@ namespace Warmindo_Simulator.src
 
         public void AddCustomer()
         {
-            string[] orders = { "Mie Instan", "Es Teh Manis" };
+            string[] orders = { "Mie Instan", "Es Teh Manis", "Nasi Goreng", "Minuman Manis" };
             string selectedOrder = orders[random.Next(orders.Length)];
             customerQueue.Add(new Customer(selectedOrder));
         }

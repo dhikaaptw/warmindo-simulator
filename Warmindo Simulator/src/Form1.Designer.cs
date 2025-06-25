@@ -41,7 +41,7 @@
             // 
             // btnServe
             // 
-            btnServe.Location = new Point(487, 82);
+            btnServe.Location = new Point(509, 82);
             btnServe.Name = "btnServe";
             btnServe.Size = new Size(150, 46);
             btnServe.TabIndex = 0;

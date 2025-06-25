@@ -20,10 +20,19 @@ namespace Warmindo_Simulator.src
             {
                 cookTimeLeft = 10;
             }
+            else if (menu == "Nasi Goreng")
+            {
+                cookTimeLeft = 12;
+            }
+            else if (menu == "Minuman Manis")
+            {
+                cookTimeLeft = 8;
+            }
             else if (menu == "Es Teh Manis")
             {
                 cookTimeLeft = 5;
             }
+            
 
             isCooking = true;
             cookTickCounter = 0;

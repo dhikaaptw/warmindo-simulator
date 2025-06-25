@@ -26,6 +26,7 @@
     <None Remove="assets\8.png" />
     <None Remove="assets\9.png" />
     <None Remove="assets\kompor.png" />
+    <None Remove="assets\lantai.png" />
     <None Remove="assets\mejaServe.png" />
     <None Remove="assets\sprite.png" />
   </ItemGroup>
@@ -77,6 +78,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="assets\kompor.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="assets\lantai.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

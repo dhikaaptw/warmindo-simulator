@@ -17,7 +17,7 @@ namespace Warmindo_Simulator.src
         public Customer(string order)
         {
             Order = order;
-            WaitTime = 30; // in seconds
+            WaitTime = 30; 
             IsServed = false;
         }
 
