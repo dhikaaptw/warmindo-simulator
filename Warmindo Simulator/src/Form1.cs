@@ -2,6 +2,7 @@
 using System;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Media;
 
 namespace Warmindo_Simulator
 {
@@ -10,6 +11,7 @@ namespace Warmindo_Simulator
         private LogicGame logic;
         private UIManager ui;
         private System.Windows.Forms.Timer gameTimer;
+        private SoundPlayer bgmPlayer;
 
         public Form1()
         {
@@ -19,6 +21,10 @@ namespace Warmindo_Simulator
 
             this.KeyPreview = true;
             this.DoubleBuffered = true;
+
+            bgmPlayer = new SoundPlayer("assets/dj.wav");
+            bgmPlayer.PlayLooping(); // biar musik ngulang terus
+            
 
             logic = new LogicGame();
             ui = new UIManager(lblPesanan, lblTimer, lblSkor, lblCookingStatus);
