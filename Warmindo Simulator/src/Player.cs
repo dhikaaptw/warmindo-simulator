@@ -6,11 +6,8 @@ using System.Windows.Forms;
 
 namespace Warmindo_Simulator.src
 {
-    internal class Player
+    internal class Player : Character
     {
-        public int X { get; set; }
-        public int Y { get; set; }
-
         private Dictionary<string, List<Image>> directionFrames = new Dictionary<string, List<Image>>();
         private string currentDirection = "Vertical";
         private int currentFrame = 0;
@@ -27,7 +24,6 @@ namespace Warmindo_Simulator.src
         public void LoadFramesFromFolder(string folderPath)
         {
             directionFrames.Clear();
-
             directionFrames["Vertical"] = new List<Image>();
             directionFrames["Right"] = new List<Image>();
             directionFrames["Left"] = new List<Image>();
@@ -52,7 +48,7 @@ namespace Warmindo_Simulator.src
             }
         }
 
-        public void Animate()
+        public override void Animate()
         {
             if (!directionFrames.ContainsKey(currentDirection)) return;
             if (directionFrames[currentDirection].Count == 0) return;
@@ -86,7 +82,6 @@ namespace Warmindo_Simulator.src
             }
 
             Rectangle newBounds = new Rectangle(newX, newY, PlayerSize, PlayerSize);
-
             bool insideForm = newBounds.Left >= 0 &&
                               newBounds.Top >= 0 &&
                               newBounds.Right <= formWidth &&
@@ -99,7 +94,9 @@ namespace Warmindo_Simulator.src
             }
         }
 
-        public void Draw(Graphics g)
+        public override void Move() { }
+
+        public override void Draw(Graphics g)
         {
             if (directionFrames.ContainsKey(currentDirection) && directionFrames[currentDirection].Count > 0)
             {
@@ -107,7 +104,7 @@ namespace Warmindo_Simulator.src
             }
             else
             {
-                g.FillRectangle(Brushes.Blue, X, Y, PlayerSize, PlayerSize); // fallback
+                g.FillRectangle(Brushes.Blue, X, Y, PlayerSize, PlayerSize);
             }
         }
 

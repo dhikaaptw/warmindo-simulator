@@ -7,7 +7,7 @@ namespace Warmindo_Simulator.src
     internal class LogicGame
     {
         private Player player;
-        private Kitchen kitchen;
+        private ICookable kitchen;
         private OrderSystem orderSystem;
         private InputHandler input;
         private Rectangle komporRect;

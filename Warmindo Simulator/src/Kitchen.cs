@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace Warmindo_Simulator.src
 {
-    internal class Kitchen
+    internal class Kitchen : ICookable
     {
         private int cookTimeLeft = 0;
         private bool isCooking = false;
